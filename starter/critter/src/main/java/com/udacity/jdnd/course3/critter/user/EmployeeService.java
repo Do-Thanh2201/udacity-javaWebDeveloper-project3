@@ -2,6 +2,7 @@ package com.udacity.jdnd.course3.critter.user;
 
 import com.udacity.jdnd.course3.critter.schedule.Schedule;
 import com.udacity.jdnd.course3.critter.schedule.ScheduleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -17,15 +18,21 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final EmployeeSkillRepository employeeSkillRepository;
     private final DayRepository dayRepository;
-    private final ScheduleRepository scheduleRepository;
 
+    private ScheduleRepository scheduleRepository;
+    @Autowired
+    public void getScheduleRepository(ScheduleRepository scheduleRepository) {
+        this.scheduleRepository = scheduleRepository;
+    }
     public EmployeeService(EmployeeRepository employeeRepository
-            , EmployeeSkillRepository employeeSkillRepository, DayRepository dayRepository, ScheduleRepository scheduleRepository) {
+            , EmployeeSkillRepository employeeSkillRepository, DayRepository dayRepository
+//            , ScheduleRepository scheduleRepository
+    ) {
 
         this.employeeRepository = employeeRepository;
         this.employeeSkillRepository = employeeSkillRepository;
         this.dayRepository = dayRepository;
-        this.scheduleRepository = scheduleRepository;
+//        this.scheduleRepository = scheduleRepository;
     }
 
     public EmployeeDTO saveEmployee(EmployeeDTO employeeDTO) {
@@ -77,7 +84,7 @@ public class EmployeeService {
         Schedule schedule = scheduleRepository.findScheduleByDate(employeeDTO.getDate())
                 .orElseThrow(() -> new EntityNotFoundException("Can't find the day available"));
 
-        List<Employee> employeeList = employeeRepository.findBySkillsAndSchedule(employeeSkillSet,schedule);
+        List<Employee> employeeList = employeeRepository.findBySkillsAndScheduleIn(employeeSkillSet,schedule);
         if(employeeList.isEmpty()) {
             return null;
         }

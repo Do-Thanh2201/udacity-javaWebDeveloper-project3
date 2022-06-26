@@ -9,5 +9,6 @@ import java.util.Set;
 
 @Repository
 public interface EmployeeRepository extends CrudRepository<Employee, Long> {
-    List<Employee> findBySkillsAndSchedule(Set<EmployeeSkill> employeeSkillSet, Schedule schedule);
+
+    List<Employee> findBySkillsAndScheduleIn(Set<EmployeeSkill> employeeSkillSet, Schedule schedule);
 }

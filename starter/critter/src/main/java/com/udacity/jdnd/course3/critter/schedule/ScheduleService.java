@@ -3,6 +3,7 @@ package com.udacity.jdnd.course3.critter.schedule;
 import com.udacity.jdnd.course3.critter.pet.Pet;
 import com.udacity.jdnd.course3.critter.pet.PetRepository;
 import com.udacity.jdnd.course3.critter.user.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -14,19 +15,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class ScheduleService {
+
     private final ScheduleRepository scheduleRepository;
     private final PetRepository petRepository;
-    private final EmployeeRepository employeeRepository;
+
+    private EmployeeRepository employeeRepository;
+
+    @Autowired
+    public  void setEmployeeRepository(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
     private final EmployeeSkillRepository employeeSkillRepository;
 
     public ScheduleService(ScheduleRepository scheduleRepository
                             ,PetRepository petRepository
-                            ,EmployeeRepository employeeRepository
+//                            ,EmployeeRepository employeeRepository
                             ,EmployeeSkillRepository employeeSkillRepository) {
 
         this.scheduleRepository = scheduleRepository;
         this.petRepository = petRepository;
-        this.employeeRepository = employeeRepository;
+//        this.employeeRepository = employeeRepository;
         this.employeeSkillRepository = employeeSkillRepository;
     }
 
