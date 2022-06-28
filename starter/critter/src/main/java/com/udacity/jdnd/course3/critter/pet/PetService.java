@@ -35,7 +35,7 @@ public class PetService {
         petRepository.save(pet);
         // Save Pet
 
-        return petDTO;
+        return this.convertToPetDTO(pet);
     }
 
 

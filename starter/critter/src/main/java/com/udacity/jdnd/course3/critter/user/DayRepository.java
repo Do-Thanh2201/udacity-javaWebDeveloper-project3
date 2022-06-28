@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface DayRepository extends CrudRepository<Day, Long> {
-    Optional<Day> findByDay(DayOfWeek day);
+    Optional<Day> findDayByDayOfWeek(DayOfWeek day);
 }

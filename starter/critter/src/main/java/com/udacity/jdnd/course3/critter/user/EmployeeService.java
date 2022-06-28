@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +63,7 @@ public class EmployeeService {
         for (DayOfWeek day:
                 daysAvailable) {
 
-            Day dayResponse = dayRepository.findByDay(day)
+            Day dayResponse = dayRepository.findDayByDayOfWeek(day)
                     .orElseThrow( () -> new EntityNotFoundException("Can't find the Day: "+ day.toString()));
 
             dayAvailableSet.add(dayResponse);
@@ -84,7 +85,7 @@ public class EmployeeService {
         Schedule schedule = scheduleRepository.findScheduleByDate(employeeDTO.getDate())
                 .orElseThrow(() -> new EntityNotFoundException("Can't find the day available"));
 
-        List<Employee> employeeList = employeeRepository.findBySkillsAndScheduleIn(employeeSkillSet,schedule);
+        List<Employee> employeeList = employeeRepository.findBySkillsInAndScheduleIn(employeeSkillSet, Collections.singletonList(schedule));
         if(employeeList.isEmpty()) {
             return null;
         }
@@ -120,7 +121,7 @@ public class EmployeeService {
         for (DayOfWeek day:
                 employeeDTO.getDaysAvailable()) {
 
-            Day dayAvailable = dayRepository.findByDay(day)
+            Day dayAvailable = dayRepository.findDayByDayOfWeek(day)
                     .orElseThrow( () -> new EntityNotFoundException("Can't find the Day: "+ day.toString()));
 
             dayAvailableSet.add(dayAvailable);

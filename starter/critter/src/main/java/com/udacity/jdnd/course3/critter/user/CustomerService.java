@@ -24,9 +24,10 @@ public class CustomerService {
         Customer customer = new Customer();
         String message = this.convertToCustomer(customer, customerDTO);
 
-        if(message != null) {
+        if(message == null) {
 
-            return customerDTO;
+            customerRepository.save(customer);
+            return this.convertToCustomerDTO(customer);
         }
          return null;
     }
@@ -59,6 +60,10 @@ public class CustomerService {
         customer.setName(customerDTO.getName());
         customer.setPhoneNumber(customerDTO.getPhoneNumber());
         customer.setNotes(customerDTO.getNotes());
+        if(customerDTO.getPetIds() == null) {
+
+            return null;
+        }
         List<Pet> petList = petRepository.findByCustomer_CustomerId(customerDTO.getId());
         if(petList.isEmpty()) {
 
@@ -82,8 +87,10 @@ public class CustomerService {
         customerDTO.setPhoneNumber(customer.getPhoneNumber());
         customerDTO.setNotes(customer.getNotes());
 
-        List<Pet> petList = customer.getPets();
-        customerDTO.setPetIds(petList.stream().map(Pet::getPetId).collect(Collectors.toList()));
+        if (customer.getPets() != null) {
+            List<Pet> petList = customer.getPets();
+            customerDTO.setPetIds(petList.stream().map(Pet::getPetId).collect(Collectors.toList()));
+        }
         return customerDTO;
     }
 }
