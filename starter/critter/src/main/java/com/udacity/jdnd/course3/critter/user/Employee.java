@@ -33,6 +33,6 @@ public class Employee {
 
     // Map to Schedule
     @ManyToOne
-    @JoinColumn(name="schedule_id", nullable=false)
+    @JoinColumn(name="schedule_id")
     private Schedule schedule;
 }

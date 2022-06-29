@@ -45,9 +45,10 @@ public class ScheduleService {
 
         if(message == null) {
 
+            scheduleRepository.save(schedule);
             return null;
         }
-        return scheduleDTO;
+        return this.convertToScheduleDTO(schedule);
     }
 
     public List<ScheduleDTO> getAllSchedules() {

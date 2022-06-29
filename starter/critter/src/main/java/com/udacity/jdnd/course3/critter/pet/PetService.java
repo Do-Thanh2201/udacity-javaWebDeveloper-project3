@@ -28,14 +28,14 @@ public class PetService {
         try {
 
             convertToPet(pet, petDTO);
+            petRepository.save(pet);
+            // Save Pet
+
+            return this.convertToPetDTO(pet);
         } catch (EntityNotFoundException e) {
 
             return null;
         }
-        petRepository.save(pet);
-        // Save Pet
-
-        return this.convertToPetDTO(pet);
     }
 
 

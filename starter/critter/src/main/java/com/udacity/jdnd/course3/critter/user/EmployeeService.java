@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -40,9 +41,10 @@ public class EmployeeService {
 
         Employee employee = new Employee();
         String message = this.convertToEmployee(employee, employeeDTO);
-
         if (message == null) {
-            return employeeDTO;
+
+            employeeRepository.save(employee);
+            return this.convertToEmployeeDTO(employee);
         }
         return null;
     }
@@ -69,6 +71,7 @@ public class EmployeeService {
             dayAvailableSet.add(dayResponse);
         }
         employee.setDaysAvailable(dayAvailableSet);
+        employeeRepository.save(employee);
     }
 
     public List<EmployeeDTO> findEmployeesForService(EmployeeRequestDTO employeeDTO) {
@@ -81,6 +84,8 @@ public class EmployeeService {
                     .orElseThrow(() -> new EntityNotFoundException("can't find the Skill"));
             employeeSkillSet.add(employeeSkill);
         }
+
+        // Parses the date
 
         Schedule schedule = scheduleRepository.findScheduleByDate(employeeDTO.getDate())
                 .orElseThrow(() -> new EntityNotFoundException("Can't find the day available"));
@@ -116,6 +121,10 @@ public class EmployeeService {
         }
         employee.setSkills(employeeSkillList);
 
+        if(employeeDTO.getDaysAvailable() == null) {
+
+            return null;
+        }
         // Set Day
         Set<Day> dayAvailableSet = new HashSet<>();
         for (DayOfWeek day:

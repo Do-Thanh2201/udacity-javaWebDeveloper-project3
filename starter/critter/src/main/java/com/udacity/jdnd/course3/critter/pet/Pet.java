@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class Pet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long petId;
+    private long petId;
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
