@@ -8,10 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -76,7 +73,7 @@ public class EmployeeService {
 
     public List<EmployeeDTO> findEmployeesForService(EmployeeRequestDTO employeeDTO) {
 
-        Set<EmployeeSkill> employeeSkillSet = new HashSet<>();
+       /* Set<EmployeeSkill> employeeSkillSet = new HashSet<>();
         for (EEmployeeSkill skill:
                 employeeDTO.getSkills()) {
 
@@ -94,7 +91,27 @@ public class EmployeeService {
         if(employeeList.isEmpty()) {
             return null;
         }
-        return employeeList.stream().map(this::convertToEmployeeDTO).collect(Collectors.toList());
+        return employeeList.stream().map(this::convertToEmployeeDTO).collect(Collectors.toList());*/
+
+        Day day = dayRepository.findDayByDayOfWeek(employeeDTO.getDate().getDayOfWeek())
+                .orElseThrow(()->new EntityNotFoundException("can't find the day"));
+        List<Employee> employees = employeeRepository.findAllByDaysAvailableContaining(day);
+        Set<EmployeeSkill> employeeSkillSet = new HashSet<>();
+        for (EEmployeeSkill skill:
+                employeeDTO.getSkills()) {
+
+            EmployeeSkill employeeSkill = employeeSkillRepository.findBySkill(skill)
+                    .orElseThrow(() -> new EntityNotFoundException("can't find the Skill"));
+            employeeSkillSet.add(employeeSkill);
+        }
+        List<Employee> availableEmployees = new ArrayList<>();
+        for(Employee employee : employees){
+            // Check if employee skills contains the required skills
+            if(employee.getSkills().containsAll(employeeSkillSet)) {
+                availableEmployees.add(employee);
+            }
+        }
+        return availableEmployees.stream().map(this::convertToEmployeeDTO).collect(Collectors.toList());
     }
 
     /** Convert from EmployeeDTO to Employee

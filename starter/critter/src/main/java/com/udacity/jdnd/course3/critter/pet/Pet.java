@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,8 +33,6 @@ public class Pet {
     private String notes;
 
     // Map to Schedule
-    @ManyToOne
-    @JoinColumn(name="schedule_id")
-    private Schedule schedule;
-
+    @ManyToMany(mappedBy = "pets")
+    private List<Schedule> schedules;
 }

@@ -32,7 +32,8 @@ public class UserController {
 
             return customerDTOResponse;
         }
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+        return null;
     }
 
     @GetMapping("/customer")
@@ -41,7 +42,8 @@ public class UserController {
         List<CustomerDTO> customerDTOList = customerService.getAllCustomers();
         if(customerDTOList == null) {
 
-            throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+            return null;
         }
         return customerDTOList;
     }
@@ -54,7 +56,8 @@ public class UserController {
             return  customerDTO;
         } catch (EntityNotFoundException e) {
 
-            throw new UnsupportedOperationException(e.getMessage());
+//        throw new UnsupportedOperationException();
+            return null;
         }
 
     }
@@ -67,7 +70,8 @@ public class UserController {
 
             return employeeDTOResponse;
         }
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+        return null;
 
     }
 
@@ -79,7 +83,8 @@ public class UserController {
             return employeeDTO;
         } catch (EntityNotFoundException e) {
 
-            throw new UnsupportedOperationException(e.getMessage());
+//        throw new UnsupportedOperationException();
+            return null;
         }
     }
 
@@ -90,7 +95,7 @@ public class UserController {
             employeeService.setAvailability(daysAvailable, employeeId);
         } catch (EntityNotFoundException e) {
 
-            throw new UnsupportedOperationException(e.getMessage());
+//        throw new UnsupportedOperationException();
         }
     }
 
@@ -102,8 +107,8 @@ public class UserController {
             return employeeDTOList;
         } catch (EntityNotFoundException e) {
 
-            throw new UnsupportedOperationException(e.getMessage());
-
+//        throw new UnsupportedOperationException();
+            return null;
         }
     }
 

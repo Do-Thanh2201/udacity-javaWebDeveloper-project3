@@ -18,7 +18,7 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final PetRepository petRepository;
-
+    private final CustomerRepository customerRepository;
     private EmployeeRepository employeeRepository;
 
     @Autowired
@@ -28,12 +28,13 @@ public class ScheduleService {
     private final EmployeeSkillRepository employeeSkillRepository;
 
     public ScheduleService(ScheduleRepository scheduleRepository
-                            ,PetRepository petRepository
+            , PetRepository petRepository
 //                            ,EmployeeRepository employeeRepository
-                            ,EmployeeSkillRepository employeeSkillRepository) {
+            , CustomerRepository customerRepository, EmployeeSkillRepository employeeSkillRepository) {
 
         this.scheduleRepository = scheduleRepository;
         this.petRepository = petRepository;
+        this.customerRepository = customerRepository;
 //        this.employeeRepository = employeeRepository;
         this.employeeSkillRepository = employeeSkillRepository;
     }
@@ -65,8 +66,12 @@ public class ScheduleService {
 
     public List<ScheduleDTO> getScheduleForPet(long petId) {
 
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find the pet"));
+/*
         List<Schedule> scheduleList = scheduleRepository.findScheduleForPet(petId);
-
+*/
+        List<Schedule> scheduleList = scheduleRepository.findAllByPets(pet);
         if(scheduleList.isEmpty()) {
 
             return null;
@@ -78,28 +83,35 @@ public class ScheduleService {
 
     public List<ScheduleDTO> getScheduleForEmployee(long employeeId) {
 
-        List<Schedule> scheduleList = scheduleRepository.findScheduleForEmployee(employeeId);
-
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find the employee"));
+        /*List<Schedule> scheduleList = scheduleRepository.findScheduleForEmployee(employeeId);
+*/
+        List<Schedule> scheduleList = scheduleRepository.findAllByEmployees(employee);
         if(scheduleList.isEmpty()) {
 
             return null;
         }
-        List<ScheduleDTO> scheduleDTOList = scheduleList.stream().map(this::convertToScheduleDTO).collect(Collectors.toList());
 
-        return scheduleDTOList;
+        return scheduleList.stream().map(this::convertToScheduleDTO).collect(Collectors.toList());
     }
 
     public List<ScheduleDTO> getScheduleForCustomer(long customerId) {
 
-        List<Schedule> scheduleList = scheduleRepository.findScheduleForCustomer(customerId);
-
+        Customer customer = customerRepository.findById(customerId)
+                .orElseThrow(() -> new EntityNotFoundException("Can't find the employee"));
+        List<Pet> petList = customer.getPets();
+        /*List<Schedule> scheduleList = scheduleRepository.findScheduleForCustomer(customerId);*/
+        List<Schedule> scheduleList = new ArrayList<>();
+        for(Pet pet: petList){
+            scheduleList.addAll(scheduleRepository.findAllByPets(pet));
+        }
         if(scheduleList.isEmpty()) {
 
             return null;
         }
-        List<ScheduleDTO> scheduleDTOList = scheduleList.stream().map(this::convertToScheduleDTO).collect(Collectors.toList());
 
-        return scheduleDTOList;
+        return scheduleList.stream().map(this::convertToScheduleDTO).collect(Collectors.toList());
     }
 
     /** Convert from ScheduleDTO to Schedule
@@ -113,7 +125,7 @@ public class ScheduleService {
         List<Employee> employees = (List<Employee>) employeeRepository.findAllById(scheduleDTO.getEmployeeIds());
         schedule.setEmployees(employees);
 
-        // Set Date
+        // Set Pet
         List<Pet> petList = (List<Pet>) petRepository.findAllById(scheduleDTO.getPetIds());
         if(petList.isEmpty()) {
 
@@ -159,7 +171,7 @@ public class ScheduleService {
         List<Pet> petList = schedule.getPets();
         scheduleDTO.setPetIds(petList.stream().map(Pet::getPetId).collect(Collectors.toList()));
 
-        scheduleDTO.setDate(scheduleDTO.getDate());
+        scheduleDTO.setDate(schedule.getDate());
 
         Set<EmployeeSkill> activitieList = schedule.getActivities();
         scheduleDTO.setActivities(activitieList.stream().map(EmployeeSkill::getSkill).collect(Collectors.toSet()));

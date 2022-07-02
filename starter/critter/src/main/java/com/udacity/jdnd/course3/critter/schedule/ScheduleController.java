@@ -25,15 +25,17 @@ public class ScheduleController {
 
             return scheduleDTOResponse;
         }
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+        return null;
     }
 
     @GetMapping
     public List<ScheduleDTO> getAllSchedules() {
         List<ScheduleDTO> scheduleDTOList = scheduleService.getAllSchedules();
-        if(scheduleDTOList.isEmpty()) {
+        if(scheduleDTOList == null) {
 
-            throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+            return null;
         }
 
         return scheduleDTOList;
@@ -43,9 +45,10 @@ public class ScheduleController {
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
 
         List<ScheduleDTO> scheduleDTOList = scheduleService.getScheduleForPet(petId);
-        if(scheduleDTOList.isEmpty()) {
+        if(scheduleDTOList == null) {
 
-            throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+            return null;
         }
         return scheduleDTOList;
     }
@@ -54,9 +57,10 @@ public class ScheduleController {
     public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
 
         List<ScheduleDTO> scheduleDTOList = scheduleService.getScheduleForEmployee(employeeId);
-        if(scheduleDTOList.isEmpty()) {
+        if(scheduleDTOList == null) {
 
-            throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+            return null;
         }
         return scheduleDTOList;
     }
@@ -65,9 +69,10 @@ public class ScheduleController {
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
 
         List<ScheduleDTO> scheduleDTOList = scheduleService.getScheduleForCustomer(customerId);
-        if(scheduleDTOList.isEmpty()) {
+        if(scheduleDTOList == null) {
 
-            throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+            return null;
         }
         return scheduleDTOList;
     }

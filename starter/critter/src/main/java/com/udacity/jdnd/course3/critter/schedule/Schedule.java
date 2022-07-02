@@ -21,11 +21,20 @@ public class Schedule {
     private long scheduleId;
 
     // Map to Employee Entity
-    @OneToMany(targetEntity = Employee.class, mappedBy="schedule", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    @JoinTable(name = "employee_schedule",
+            joinColumns = {@JoinColumn(name = "schedule_id")},
+            inverseJoinColumns = {@JoinColumn(name = "employee_id")})
     private List<Employee> employees;
 
     // Map to Pet Entity
-    @OneToMany(targetEntity = Pet.class,mappedBy="schedule", cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "schedule_pet",
+            joinColumns = {@JoinColumn(name = "schedule_id")},
+            inverseJoinColumns = {@JoinColumn(name = "pet_id")}
+    )
     private List<Pet> pets;
 
     private LocalDate date;

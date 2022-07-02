@@ -23,9 +23,10 @@ public class PetController {
         PetDTO petDTOResponse = petService.savePet(petDTO);
         if (petDTOResponse != null) {
 
-            return petDTO;
+            return petDTOResponse;
         }
-        throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+        return null;
     }
 
     @GetMapping("/{petId}")
@@ -37,7 +38,8 @@ public class PetController {
             return petDTOResponse;
         } catch (EntityNotFoundException e) {
 
-            throw new UnsupportedOperationException();
+            //        throw new UnsupportedOperationException();
+            return null;
         }
     }
 
@@ -48,8 +50,8 @@ public class PetController {
         if (petDTOList.isEmpty())
         {
 
-            throw new UnsupportedOperationException();
-        }
+//        throw new UnsupportedOperationException();
+            return null;        }
         return petDTOList;
     }
 
@@ -61,7 +63,8 @@ public class PetController {
         if (petDTOList.isEmpty())
         {
 
-            throw new UnsupportedOperationException();
+//        throw new UnsupportedOperationException();
+            return null;
         }
         return petDTOList;
     }

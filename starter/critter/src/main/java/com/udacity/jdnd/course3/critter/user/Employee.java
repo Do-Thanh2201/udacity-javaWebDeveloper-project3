@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -32,7 +33,6 @@ public class Employee {
     private Set<Day> daysAvailable = new HashSet<>();
 
     // Map to Schedule
-    @ManyToOne
-    @JoinColumn(name="schedule_id")
-    private Schedule schedule;
+    @ManyToMany(mappedBy = "employees")
+    private List<Schedule> schedules;
 }
